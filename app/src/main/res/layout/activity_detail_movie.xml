@@ -12,7 +12,6 @@
         android:id="@+id/movie_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="TEST"
         app:titleTextColor="#FFF"
         android:background="#009353"/>
 

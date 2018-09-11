@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".HomeFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/home_bar"
-        app:titleTextColor="#FFF"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/THomeBackground"
         app:title="@string/app_name"
-        android:layout_height="?attr/actionBarSize"/>
+        app:titleTextColor="#FFF" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rc_home"
-        android:layout_marginTop="?attr/actionBarSize"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/rf_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rc_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -52,6 +52,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<GetMovieModel> call, @NonNull Response<GetMovieModel> response) {
                         GetMovieModel movie = response.body();
                         if( movie != null ){
+                            toolbar.setTitle(movie.getOriginalTitle());
                             Glide.with(DetailMovieActivity.this).load("https://image.tmdb.org/t/p/w500"+movie.getPosterPath()).into(imageView);
                             txtTitle.setText(movie.getOriginalTitle());
                             txtDesc.setText(movie.getOverview());
