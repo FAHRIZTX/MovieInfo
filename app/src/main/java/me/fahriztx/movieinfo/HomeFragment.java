@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment {
         window.setStatusBarColor(getResources().getColor(R.color.THomeBackgroundDark));
 
         getData();
+        super.onCreate(savedInstanceState);
 
         swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#3F51B5"), Color.parseColor("#C90000"), Color.parseColor("#FFC800"), Color.parseColor("#0FB700"));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -67,25 +68,29 @@ public class HomeFragment extends Fragment {
 
     private void getData(){
         ApiServices service = new BaseApi().init();
-        service
-                .getHomeResults("8a8becf78d444856d44964d686aafe1a", "popularity.desc")
-                .enqueue(new Callback<GetHomeModel>() {
-                    @Override
-                    public void onResponse(@NonNull Call<GetHomeModel> call, @NonNull Response<GetHomeModel> response) {
-                        GetHomeModel home = response.body();
-                        swipeRefreshLayout.setRefreshing(false);
-                        if( home != null ){
-                            recyclerAdapter = new HomeRecyclerAdapter(home.getResults());
-                            recyclerView.setAdapter(recyclerAdapter);
-                        }else{
-                            Toast.makeText(getContext(), "Failed Get Data", Toast.LENGTH_SHORT).show();
+        try{
+            service
+                    .getHomeResults("8a8becf78d444856d44964d686aafe1a", "popularity.desc")
+                    .enqueue(new Callback<GetHomeModel>() {
+                        @Override
+                        public void onResponse(@NonNull Call<GetHomeModel> call, @NonNull Response<GetHomeModel> response) {
+                            GetHomeModel home = response.body();
+                            swipeRefreshLayout.setRefreshing(false);
+                            if( home != null ){
+                                recyclerAdapter = new HomeRecyclerAdapter(home.getResults());
+                                recyclerView.setAdapter(recyclerAdapter);
+                            }else{
+                                Toast.makeText(getContext(), "Failed Get Data", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(@NonNull Call<GetHomeModel> call, @NonNull Throwable t) {
-                        Toast.makeText(getContext(), "Check Your Connection", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(@NonNull Call<GetHomeModel> call, @NonNull Throwable t) {
+                            Toast.makeText(getContext(), "Check Your Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }catch (Exception error){
+
+        }
     }
 }

@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BaseApi {
 
-    public ApiServices init(){
+    public ApiServices init() {
         Retrofit retrofit = new Retrofit
                 .Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -15,5 +15,4 @@ public class BaseApi {
         ApiServices service = retrofit.create(ApiServices.class);
         return service;
     }
-
 }

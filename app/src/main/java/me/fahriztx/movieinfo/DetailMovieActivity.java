@@ -1,11 +1,13 @@
 package me.fahriztx.movieinfo;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.movie_bar) Toolbar toolbar;
     @BindView(R.id.title_dm) TextView txtTitle;
     @BindView(R.id.desc_dm) TextView txtDesc;
+    @BindView(R.id.ln_detail) LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,26 +49,31 @@ public class DetailMovieActivity extends AppCompatActivity {
         final int movie_id = getIntent().getIntExtra("MOVIE_ID",0);
 
         ApiServices services = new BaseApi().init();
-        services.getMovieResults(movie_id,"8a8becf78d444856d44964d686aafe1a")
-                .enqueue(new Callback<GetMovieModel>() {
-                    @Override
-                    public void onResponse(@NonNull Call<GetMovieModel> call, @NonNull Response<GetMovieModel> response) {
-                        GetMovieModel movie = response.body();
-                        if( movie != null ){
-                            toolbar.setTitle(movie.getOriginalTitle());
-                            Glide.with(DetailMovieActivity.this).load("https://image.tmdb.org/t/p/w500"+movie.getPosterPath()).into(imageView);
-                            txtTitle.setText(movie.getOriginalTitle());
-                            txtDesc.setText(movie.getOverview());
-                        }else{
-                            Toast.makeText(DetailMovieActivity.this, "Failed Get Data", Toast.LENGTH_SHORT).show();
+        try{
+            services.getMovieResults(movie_id,"8a8becf78d444856d44964d686aafe1a")
+                    .enqueue(new Callback<GetMovieModel>() {
+                        @Override
+                        public void onResponse(@NonNull Call<GetMovieModel> call, @NonNull Response<GetMovieModel> response) {
+                            GetMovieModel movie = response.body();
+                            if( movie != null ){
+                                toolbar.setTitle(movie.getOriginalTitle());
+                                Glide.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w500"+movie.getPosterPath()).into(imageView);
+                                txtTitle.setText(movie.getOriginalTitle());
+                                txtDesc.setText(movie.getOverview());
+                                linearLayout.setBackgroundColor(Color.parseColor("#1b1b1b"));
+                            }else{
+                                Toast.makeText(DetailMovieActivity.this, "Failed Get Data", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(@NonNull Call<GetMovieModel> call, @NonNull Throwable t) {
-                        Toast.makeText(DetailMovieActivity.this, "Check Your Connection", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onFailure(@NonNull Call<GetMovieModel> call, @NonNull Throwable t) {
+                            Toast.makeText(DetailMovieActivity.this, "Check Your Connection", Toast.LENGTH_SHORT).show();
 
-                    }
-                });
+                        }
+                    });
+        }catch (Exception error){
+
+        }
     }
 }

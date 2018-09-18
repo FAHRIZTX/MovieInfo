@@ -99,7 +99,7 @@ public class SearchFragment extends Fragment {
 
         MenuItem mSearch = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        final SearchView mSearchView = (SearchView) mSearch.getActionView();
 
         mSearchView.setQueryHint("Search");
 
@@ -110,6 +110,7 @@ public class SearchFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 _query = query;
                 getData(_query);
+                mSearchView.clearFocus();
                 return true;
             }
 
@@ -123,27 +124,31 @@ public class SearchFragment extends Fragment {
 
     private void getData(String query) {
         ApiServices services = new BaseApi().init();
-        services.getSearchResults(query, "8a8becf78d444856d44964d686aafe1a")
-                .enqueue(new Callback<GetSearchModel>() {
-                    @Override
-                    public void onResponse(@NonNull Call<GetSearchModel> call, @NonNull Response<GetSearchModel> response) {
-                        GetSearchModel search = response.body();
+        try{
+            services.getSearchResults(query, "8a8becf78d444856d44964d686aafe1a")
+                    .enqueue(new Callback<GetSearchModel>() {
+                        @Override
+                        public void onResponse(@NonNull Call<GetSearchModel> call, @NonNull Response<GetSearchModel> response) {
+                            GetSearchModel search = response.body();
 
-                        swipeRefreshLayout.setRefreshing(false);
+                            swipeRefreshLayout.setRefreshing(false);
 
-                        if (search != null) {
-                            recyclerAdapter = new SearchRecyclerAdapter(search.getResults());
-                            recyclerView.setAdapter(recyclerAdapter);
-                        } else {
+                            if (search != null) {
+                                recyclerAdapter = new SearchRecyclerAdapter(search.getResults());
+                                recyclerView.setAdapter(recyclerAdapter);
+                            } else {
+                                Toast.makeText(getContext(), "Failed Get Data", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<GetSearchModel> call, @NonNull Throwable t) {
                             Toast.makeText(getContext(), "Failed Get Data", Toast.LENGTH_SHORT).show();
                         }
-                    }
+                    });
+        }catch (Exception error){
 
-                    @Override
-                    public void onFailure(@NonNull Call<GetSearchModel> call, @NonNull Throwable t) {
-                        Toast.makeText(getContext(), "Failed Get Data", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        }
     }
 
 }
