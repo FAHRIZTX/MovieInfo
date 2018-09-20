@@ -1,10 +1,12 @@
 package me.fahriztx.movieinfo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.search) ImageButton btnSearch;
     @BindView(R.id.trending) ImageButton btnTrending;
 
+    static LinearLayout linearLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.frLayout, new HomeFragment())
                 .commit();
+        linearLayout = findViewById(R.id.container);
     }
 
     @OnClick(R.id.home)
@@ -66,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.frLayout, new TrendingFragment())
                 .commit();
+    }
+
+    public static void setBackgroundColor(String color){
+        linearLayout.setBackgroundColor(Color.parseColor(color));
     }
 
 }

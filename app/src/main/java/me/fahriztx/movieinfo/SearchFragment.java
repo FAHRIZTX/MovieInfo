@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -40,12 +42,11 @@ import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
 
-    @BindView(R.id.rc_search)
-    RecyclerView recyclerView;
-    @BindView(R.id.search_bar)
-    Toolbar toolbar;
-    @BindView(R.id.rf_search)
-    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.rc_search) RecyclerView recyclerView;
+    @BindView(R.id.search_bar) Toolbar toolbar;
+    @BindView(R.id.rf_search) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.pg_search) ProgressBar progressBar;
+    @BindView(R.id.rl_search) RelativeLayout relativeLayout;
 
     private SearchRecyclerAdapter recyclerAdapter;
     private String _query = null;
@@ -80,13 +81,13 @@ public class SearchFragment extends Fragment {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(getResources().getColor(R.color.TSearchBackgroundDark));
 
-        getData(_query);
+        getData(_query, true);
 
         swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#3F51B5"), Color.parseColor("#C90000"), Color.parseColor("#FFC800"), Color.parseColor("#0FB700"));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData(_query);
+                getData(_query, false);
             }
         });
 
@@ -109,7 +110,7 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 _query = query;
-                getData(_query);
+                getData(_query, true);
                 mSearchView.clearFocus();
                 return true;
             }
@@ -122,8 +123,14 @@ public class SearchFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void getData(String query) {
+    private void getData(String query, final Boolean showLoad) {
         ApiServices services = new BaseApi().init();
+        if (showLoad) {
+            recyclerView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            MainActivity.setBackgroundColor("#FFFFFF");
+        }
         try{
             services.getSearchResults(query, "8a8becf78d444856d44964d686aafe1a")
                     .enqueue(new Callback<GetSearchModel>() {
@@ -132,6 +139,13 @@ public class SearchFragment extends Fragment {
                             GetSearchModel search = response.body();
 
                             swipeRefreshLayout.setRefreshing(false);
+
+                            if (showLoad) {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                                relativeLayout.setBackgroundColor(Color.parseColor("#1b1b1b"));
+                                MainActivity.setBackgroundColor("#1b1b1b");
+                            }
 
                             if (search != null) {
                                 recyclerAdapter = new SearchRecyclerAdapter(search.getResults());
@@ -143,7 +157,8 @@ public class SearchFragment extends Fragment {
 
                         @Override
                         public void onFailure(@NonNull Call<GetSearchModel> call, @NonNull Throwable t) {
-                            Toast.makeText(getContext(), "Failed Get Data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Check Your Connection!!!", Toast.LENGTH_SHORT).show();
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     });
         }catch (Exception error){

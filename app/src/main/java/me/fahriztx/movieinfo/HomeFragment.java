@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.List;
@@ -35,6 +37,8 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.rc_home) RecyclerView recyclerView;
     @BindView(R.id.rf_home) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.pg_home) ProgressBar progressBar;
+    @BindView(R.id.rl_home) RelativeLayout relativeLayout;
 
     private HomeRecyclerAdapter recyclerAdapter;
 
@@ -53,20 +57,27 @@ public class HomeFragment extends Fragment {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(getResources().getColor(R.color.THomeBackgroundDark));
 
-        getData();
+        getData(true);
         super.onCreate(savedInstanceState);
 
         swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#3F51B5"), Color.parseColor("#C90000"), Color.parseColor("#FFC800"), Color.parseColor("#0FB700"));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData();
+                getData(false);
             }
         });
         return view;
     }
 
-    private void getData(){
+    private void getData(final Boolean showLoad){
+
+        if (showLoad) {
+            progressBar.setVisibility(View.VISIBLE);
+            relativeLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            MainActivity.setBackgroundColor("#FFFFFF");
+        }
+
         ApiServices service = new BaseApi().init();
         try{
             service
@@ -76,6 +87,11 @@ public class HomeFragment extends Fragment {
                         public void onResponse(@NonNull Call<GetHomeModel> call, @NonNull Response<GetHomeModel> response) {
                             GetHomeModel home = response.body();
                             swipeRefreshLayout.setRefreshing(false);
+                            if (showLoad) {
+                                progressBar.setVisibility(View.GONE);
+                                relativeLayout.setBackgroundColor(Color.parseColor("#1b1b1b"));
+                                MainActivity.setBackgroundColor("#1b1b1b");
+                            }
                             if( home != null ){
                                 recyclerAdapter = new HomeRecyclerAdapter(home.getResults());
                                 recyclerView.setAdapter(recyclerAdapter);
@@ -86,7 +102,8 @@ public class HomeFragment extends Fragment {
 
                         @Override
                         public void onFailure(@NonNull Call<GetHomeModel> call, @NonNull Throwable t) {
-                            Toast.makeText(getContext(), "Check Your Connection", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Check Your Connection!!!", Toast.LENGTH_SHORT).show();
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     });
         }catch (Exception error){

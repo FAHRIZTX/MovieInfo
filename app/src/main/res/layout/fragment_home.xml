@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rl_home"
     tools:context=".HomeFragment">
 
     <android.support.v7.widget.Toolbar
@@ -13,6 +14,13 @@
         android:background="@color/THomeBackground"
         app:title="@string/app_name"
         app:titleTextColor="#FFF" />
+
+    <ProgressBar
+        android:id="@+id/pg_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@drawable/loading_style"
+        android:layout_centerInParent="true"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/rf_home"
@@ -28,4 +36,4 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</FrameLayout>
+</RelativeLayout>

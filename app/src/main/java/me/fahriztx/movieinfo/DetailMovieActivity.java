@@ -6,8 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.title_dm) TextView txtTitle;
     @BindView(R.id.desc_dm) TextView txtDesc;
     @BindView(R.id.ln_detail) LinearLayout linearLayout;
+    @BindView(R.id.pg_detail) ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,11 @@ public class DetailMovieActivity extends AppCompatActivity {
             }
         });
 
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getResources().getColor(R.color.TDetailBackgroundDark));
+
         final int movie_id = getIntent().getIntExtra("MOVIE_ID",0);
 
         ApiServices services = new BaseApi().init();
@@ -55,6 +64,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NonNull Call<GetMovieModel> call, @NonNull Response<GetMovieModel> response) {
                             GetMovieModel movie = response.body();
+                            progressBar.setVisibility(View.GONE);
                             if( movie != null ){
                                 toolbar.setTitle(movie.getOriginalTitle());
                                 Glide.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w500"+movie.getPosterPath()).into(imageView);

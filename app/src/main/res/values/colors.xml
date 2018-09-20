@@ -13,4 +13,7 @@
 
     <color name="TTrendingBackground">#C90000</color>
     <color name="TTrandingBackgroundDark">#860000</color>
+
+    <color name="TDetailBackground">#009353</color>
+    <color name="TDetailBackgroundDark">#006e3e</color>
 </resources>
