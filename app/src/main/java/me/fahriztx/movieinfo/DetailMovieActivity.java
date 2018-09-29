@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.fahriztx.movieinfo.Api.ApiServices;
 import me.fahriztx.movieinfo.Api.BaseApi;
+import me.fahriztx.movieinfo.Models.GenresItem;
 import me.fahriztx.movieinfo.Models.GetMovieModel;
+import me.fahriztx.movieinfo.Models.ProductionCompaniesItem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,8 +34,10 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.movie_bar) Toolbar toolbar;
     @BindView(R.id.title_dm) TextView txtTitle;
     @BindView(R.id.desc_dm) TextView txtDesc;
-    @BindView(R.id.ln_detail) LinearLayout linearLayout;
+    @BindView(R.id.rl_detail) RelativeLayout relativeLayout;
     @BindView(R.id.pg_detail) ProgressBar progressBar;
+    @BindView(R.id.genre_dm) TextView txtGenre;
+    @BindView(R.id.companies_dm) TextView txtCompanies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +71,24 @@ public class DetailMovieActivity extends AppCompatActivity {
                             GetMovieModel movie = response.body();
                             progressBar.setVisibility(View.GONE);
                             if( movie != null ){
-                                toolbar.setTitle(movie.getOriginalTitle());
+
+                                StringBuilder genres = new StringBuilder();
+                                StringBuilder companies = new StringBuilder("Companies : ");
+                                for (GenresItem genre : movie.getGenres()){
+                                    genres.append(genre.getName()+", ");
+                                }
+
+                                for (ProductionCompaniesItem comp : movie.getProductionCompanies()){
+                                    companies.append(comp.getName()+", ");
+                                }
+
+                                relativeLayout.setBackgroundColor(Color.parseColor("#1b1b1b"));
                                 Glide.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w500"+movie.getPosterPath()).into(imageView);
+                                toolbar.setTitle(movie.getOriginalTitle());
                                 txtTitle.setText(movie.getOriginalTitle());
                                 txtDesc.setText(movie.getOverview());
-                                linearLayout.setBackgroundColor(Color.parseColor("#1b1b1b"));
+                                txtGenre.setText(genres.substring(0,genres.length()-2));
+                                txtCompanies.setText(companies.substring(0, companies.length()-2));
                             }else{
                                 Toast.makeText(DetailMovieActivity.this, "Failed Get Data", Toast.LENGTH_SHORT).show();
                             }
