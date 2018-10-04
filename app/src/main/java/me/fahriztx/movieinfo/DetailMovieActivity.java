@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import retrofit2.Response;
 
 public class DetailMovieActivity extends AppCompatActivity {
 
+    @BindView(R.id.scrollView) ScrollView scrollView;
     @BindView(R.id.img_dm) ImageView imageView;
     @BindView(R.id.movie_bar) Toolbar toolbar;
     @BindView(R.id.title_dm) TextView txtTitle;
@@ -73,7 +75,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                             if( movie != null ){
 
                                 StringBuilder genres = new StringBuilder();
-                                StringBuilder companies = new StringBuilder("Companies : ");
+                                StringBuilder companies = new StringBuilder();
                                 for (GenresItem genre : movie.getGenres()){
                                     genres.append(genre.getName()+", ");
                                 }
@@ -89,6 +91,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                                 txtDesc.setText(movie.getOverview());
                                 txtGenre.setText(genres.substring(0,genres.length()-2));
                                 txtCompanies.setText(companies.substring(0, companies.length()-2));
+                                scrollView.setVisibility(View.VISIBLE);
                             }else{
                                 Toast.makeText(DetailMovieActivity.this, "Failed Get Data", Toast.LENGTH_SHORT).show();
                             }

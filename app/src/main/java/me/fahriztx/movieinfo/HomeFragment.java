@@ -4,34 +4,24 @@ package me.fahriztx.movieinfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.fahriztx.movieinfo.Api.ApiServices;
 import me.fahriztx.movieinfo.Api.BaseApi;
 import me.fahriztx.movieinfo.Models.GetHomeModel;
-import me.fahriztx.movieinfo.Models.HomeResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeFragment extends Fragment {
 
@@ -51,11 +41,6 @@ public class HomeFragment extends Fragment {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(container.getContext(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-
-        Window window = getActivity().getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.THomeBackgroundDark));
 
         getData(true);
         super.onCreate(savedInstanceState);

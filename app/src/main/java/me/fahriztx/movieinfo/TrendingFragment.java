@@ -11,12 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.fahriztx.movieinfo.Api.ApiServices;
@@ -41,11 +38,6 @@ public class TrendingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_trending, container, false);
 
         ButterKnife.bind(this, view);
-
-        Window window = getActivity().getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.TTrandingBackgroundDark));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);

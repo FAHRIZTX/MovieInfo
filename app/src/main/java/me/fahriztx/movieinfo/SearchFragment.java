@@ -4,33 +4,26 @@ package me.fahriztx.movieinfo;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.fahriztx.movieinfo.Api.ApiServices;
@@ -75,11 +68,6 @@ public class SearchFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        Window window = getActivity().getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.TSearchBackgroundDark));
 
         getData(_query, true);
 
